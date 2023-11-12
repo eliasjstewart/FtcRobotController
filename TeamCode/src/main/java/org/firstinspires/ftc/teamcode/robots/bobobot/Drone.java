@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robots.r2v2.util.Utils;
 public class Drone {
     private Servo droneLaunch = null;
-    public static double RELEASE = 0.7;
+    public static double RELEASE = 0.5;
     private Telemetry telemetry;
     private HardwareMap hardwareMap;
     public Drone(Telemetry telemetry, HardwareMap hardwareMap) {
@@ -29,8 +29,7 @@ public class Drone {
             droneLaunch.setPosition(RELEASE);
 
     }
-
-    //public double getDronePosition () { return droneLaunch.getPosition();}
+    public double getDronePosition () { return droneLaunch.getPosition();}
 
 }
 
