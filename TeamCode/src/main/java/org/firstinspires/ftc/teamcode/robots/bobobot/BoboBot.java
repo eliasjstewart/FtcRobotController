@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 //"C:\Users\lequi\Documents\For Bobobot Testing.txt"
 @Config("BoboGameVariables")
-//@Autonomous(name="BoboOpMode", group="Challenge")
 @TeleOp(name="BoboOpMode", group="Challenge")
 public class BoboBot extends OpMode {
     Robot bobo;

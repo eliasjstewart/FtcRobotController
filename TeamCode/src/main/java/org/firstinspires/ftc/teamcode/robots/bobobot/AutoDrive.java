@@ -24,6 +24,9 @@ public class AutoDrive {
     // power input for each respective wheel
     private static final float DEADZONE = .1f;
     double robotSpeed = 1;
+    private int tickpertile = 3055;
+    public int left = -1;
+    public int right = 1;
 
     public AutoDrive (Telemetry telemetry, HardwareMap hardwareMap) {
         this.telemetry = telemetry;
@@ -44,7 +47,7 @@ public class AutoDrive {
         motorBackLeft.setPower(powerBackLeft*robotSpeed);
         motorBackRight.setPower(powerBackRight*robotSpeed);
     }
-    public void autoTelemetry(){
+    public void driveTelemetry(){
         telemetry.addData("Back Right Position \t", motorBackRight.getCurrentPosition());
         telemetry.addData("Back Left Position \t", motorBackLeft.getCurrentPosition());
         telemetry.addData("Front Right Position \t", motorFrontRight.getCurrentPosition());
@@ -55,15 +58,34 @@ public class AutoDrive {
         motorBackLeft = this.hardwareMap.get(DcMotorEx.class, "motorBackLeft");
         motorFrontRight = this.hardwareMap.get(DcMotorEx.class, "motorFrontRight");
         motorBackRight = this.hardwareMap.get(DcMotorEx.class, "motorBackRight");
-        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        /*motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         motorBackRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         motorFrontLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        motorFrontRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        motorFrontRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);*/
         motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+
     }
+    public void tile(){
+        motorFrontLeft.setPower(1);
+        motorFrontRight.setPower(1);
+        motorBackLeft.setPower(1);
+        motorBackRight.setPower(1);
+        motorBackLeft.setTargetPosition((motorBackLeft.getCurrentPosition()) + tickpertile);
+        motorBackRight.setTargetPosition((motorBackRight.getCurrentPosition())+ tickpertile);
+        motorFrontLeft.setTargetPosition((motorFrontLeft.getCurrentPosition())+ tickpertile);
+        motorFrontRight.setTargetPosition((motorFrontRight.getCurrentPosition())+ tickpertile);
+    }
+    public void left(){
+        mechanumAuto(0,0,1);
+    }
+    public void right() {
+        mechanumAuto(0,0,-1);
+    }
+
+
 }

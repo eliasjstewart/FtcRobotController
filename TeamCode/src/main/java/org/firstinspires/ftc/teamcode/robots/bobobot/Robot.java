@@ -17,6 +17,7 @@ public class Robot {
         DriveTrain driveTrain;
         Drone droneLaunch;
         IntakeClaw claw;
+
         private double averageVoltage;
         public Robot(Telemetry telemetry, HardwareMap hardwareMap)
         {
@@ -29,11 +30,7 @@ public class Robot {
             intakeClawInit();
 
         }
-        public void motorInit()
-        {
-            driveTrain.motorInit();
-
-        }
+        public void motorInit() { driveTrain.motorInit(); }
         public void droneInit()
         {
             droneLaunch.droneInit();
