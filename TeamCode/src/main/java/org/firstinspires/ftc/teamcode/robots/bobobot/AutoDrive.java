@@ -21,6 +21,7 @@ public class AutoDrive {
     private double powerFrontRight = 0;
     private double powerBackLeft = 0;
     private double powerBackRight = 0;
+    private boolean moveinit = true;
     // power input for each respective wheel
     private static final float DEADZONE = .1f;
     double robotSpeed = 1;
@@ -70,15 +71,40 @@ public class AutoDrive {
         motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
 
     }
-    public void tile(){
-        motorFrontLeft.setPower(1);
-        motorFrontRight.setPower(1);
-        motorBackLeft.setPower(1);
-        motorBackRight.setPower(1);
-        motorBackLeft.setTargetPosition((motorBackLeft.getCurrentPosition()) + tickpertile);
-        motorBackRight.setTargetPosition((motorBackRight.getCurrentPosition())+ tickpertile);
-        motorFrontLeft.setTargetPosition((motorFrontLeft.getCurrentPosition())+ tickpertile);
-        motorFrontRight.setTargetPosition((motorFrontRight.getCurrentPosition())+ tickpertile);
+    public boolean tile(double tiles){
+        int mbl = 0, mbr = 0, mfl = 0, mfr = 0;
+        int mbl2 = 0, mbr2 = 0, mfl2 = 0, mfr2 = 0;
+        int delta = 0;
+        int avg = 0, currentAvg = 0;
+        if(!moveinit){
+
+            delta *= (int) (tiles*tickpertile);
+            mbl2 = motorBackLeft.getCurrentPosition();
+            mbr2 = motorBackRight.getCurrentPosition();
+            mfl2 = motorFrontLeft.getCurrentPosition();
+            mfr2 = motorFrontRight.getCurrentPosition();
+            mbl = mbl2 + delta;
+            mbr = mbr2 + delta;
+            mfl = mfl2 + delta;
+            mfr = mfr2 + delta;
+            moveinit = true;
+        }
+        else{
+            motorFrontLeft.setPower(1);
+            motorFrontRight.setPower(1);
+            motorBackLeft.setPower(1);
+            motorBackRight.setPower(1);
+            motorBackLeft.setTargetPosition(mbl);
+            motorBackRight.setTargetPosition(mbl);
+            motorFrontLeft.setTargetPosition(mbl);
+            motorFrontRight.setTargetPosition(mbl);
+            avg = (int)(mbl + mbr + mfl + mfr) / 3 ;
+            currentAvg = (int)(mbl2 + mbr2 + mfl2 + mfr2) / 3;
+        }
+        /*if (){
+
+        }*/
+        return false;
     }
     public void left(){
         mechanumAuto(0,0,1);

@@ -21,8 +21,8 @@ public class BoboAuto extends OpMode {
 
     @Override
     public void loop() {
-        autobobo.drive.tile();
-
+        autobobo.drive.tile(1);
+        autobobo.drive.driveTelemetry();
     }
 
 }
