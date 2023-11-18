@@ -9,7 +9,7 @@ class DriveTile extends Assign {
     public DriveTile(Autobot autobot, double tiles){
         this.autobot = autobot;
         this.tiles = tiles;
-        delta = autobot.drive.getMotorAvgPosition() + Math.abs(tiles*)
+        delta = autobot.drive.getMotorAvgPosition() + Math.abs(tiles*TICKSPERTILE);
     }
     @Override
     public boolean run(){
