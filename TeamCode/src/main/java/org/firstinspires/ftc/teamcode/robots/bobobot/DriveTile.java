@@ -13,7 +13,7 @@ class DriveTile extends Assign {
     }
     @Override
     public boolean run(){
-        if(autobot.drive.getMotorAvgPosition()< delta){
+        if(autobot.drive.getMotorAvgPosition() < delta){
             autobot.drive.mechanumAuto(tiles/Math.abs(tiles)*MAXMOTORSPEED, 0, 0);
             return true;
         }
