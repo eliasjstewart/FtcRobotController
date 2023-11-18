@@ -67,4 +67,27 @@ class DriveTrain {
         motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
     }
+    public void resetMotors() {
+        motorFrontLeft.setPower(0);
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
+        motorFrontRight.setPower(0);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+        this.motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorFrontLeft.setPower(1);
+        motorBackLeft.setPower(1);
+        motorBackRight.setPower(1);
+        motorFrontRight.setPower(1);
+        mechanumDrive(0, 0, 0);
+    }
+
+    public double getMotorAvgPosition(){return (double)(Math.abs(motorFrontLeft.getCurrentPosition())+Math.abs(motorFrontRight.getCurrentPosition())+Math.abs(motorBackLeft.getCurrentPosition())+Math.abs(motorBackRight.getCurrentPosition()))/4.0;}
 }

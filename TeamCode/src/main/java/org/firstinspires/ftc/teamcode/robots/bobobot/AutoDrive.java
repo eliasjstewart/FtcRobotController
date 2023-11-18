@@ -21,7 +21,7 @@ public class AutoDrive {
     private double powerFrontRight = 0;
     private double powerBackLeft = 0;
     private double powerBackRight = 0;
-    private boolean moveinit = true;
+    private boolean moveinit = false;
     // power input for each respective wheel
     private static final float DEADZONE = .1f;
     double robotSpeed = 1;
@@ -59,14 +59,14 @@ public class AutoDrive {
         motorBackLeft = this.hardwareMap.get(DcMotorEx.class, "motorBackLeft");
         motorFrontRight = this.hardwareMap.get(DcMotorEx.class, "motorFrontRight");
         motorBackRight = this.hardwareMap.get(DcMotorEx.class, "motorBackRight");
-        /*motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         motorBackRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         motorFrontLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        motorFrontRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);*/
+        motorFrontRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
 
@@ -77,7 +77,6 @@ public class AutoDrive {
         int delta = 0;
         int avg = 0, currentAvg = 0;
         if(!moveinit){
-
             delta *= (int) (tiles*tickpertile);
             mbl2 = motorBackLeft.getCurrentPosition();
             mbr2 = motorBackRight.getCurrentPosition();
@@ -87,24 +86,57 @@ public class AutoDrive {
             mbr = mbr2 + delta;
             mfl = mfl2 + delta;
             mfr = mfr2 + delta;
-            moveinit = true;
-        }
-        else{
             motorFrontLeft.setPower(1);
             motorFrontRight.setPower(1);
             motorBackLeft.setPower(1);
             motorBackRight.setPower(1);
             motorBackLeft.setTargetPosition(mbl);
-            motorBackRight.setTargetPosition(mbl);
-            motorFrontLeft.setTargetPosition(mbl);
-            motorFrontRight.setTargetPosition(mbl);
-            avg = (int)(mbl + mbr + mfl + mfr) / 3 ;
-            currentAvg = (int)(mbl2 + mbr2 + mfl2 + mfr2) / 3;
+            motorBackRight.setTargetPosition(mbr);
+            motorFrontLeft.setTargetPosition(mfl);
+            motorFrontRight.setTargetPosition(mfr);
+            moveinit = true;
         }
-        /*if (){
+        else{
+            /*motorFrontLeft.setPower(1);
+            motorFrontRight.setPower(1);
+            motorBackLeft.setPower(1);
+            motorBackRight.setPower(1);
+            motorBackLeft.setTargetPosition(mbl);
+            motorBackRight.setTargetPosition(mbr);
+            motorFrontLeft.setTargetPosition(mfl);
+            motorFrontRight.setTargetPosition(mfr);*/
+            avg = (int)(motorBackLeft.getTargetPosition() + motorFrontRight.getTargetPosition() + motorBackRight.getTargetPosition() + motorFrontLeft.getTargetPosition()) / 3;
+            currentAvg = (int)(mbl2 + mbr2 + mfl2 + mfr2) / 3;
 
-        }*/
-        return false;
+        }
+        if (Math.abs(currentAvg) >= Math.abs((avg - 20))){
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+    public void resetMotors() {
+        motorFrontLeft.setPower(0);
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
+        motorFrontRight.setPower(0);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+        this.motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorFrontLeft.setPower(1);
+        motorBackLeft.setPower(1);
+        motorBackRight.setPower(1);
+        motorFrontRight.setPower(1);
+        mechanumAuto(0, 0, 0);
     }
     public void left(){
         mechanumAuto(0,0,1);
@@ -113,5 +145,5 @@ public class AutoDrive {
         mechanumAuto(0,0,-1);
     }
 
-
+    public double getMotorAvgPosition(){return (double)(Math.abs(motorFrontLeft.getCurrentPosition())+Math.abs(motorFrontRight.getCurrentPosition())+Math.abs(motorBackLeft.getCurrentPosition())+Math.abs(motorBackRight.getCurrentPosition()))/4.0;}
 }

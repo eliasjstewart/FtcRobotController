@@ -43,6 +43,8 @@ public class IntakeClaw {
         clawArm.setTargetPosition(0);
         clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         clawWrist.setPosition(0);
+        clawSpan.setPosition(CLOSECLAW);
+
 
     }
 
@@ -62,7 +64,7 @@ public class IntakeClaw {
         //if (temptarget > maxArmTicks)
         //    temptarget = maxArmTicks;
         if (press == true) {
-            clawArm.setTargetPosition(200);
+            clawArm.setTargetPosition(240);
         }
 
 
@@ -85,9 +87,9 @@ public class IntakeClaw {
 
     public void armWristDown(boolean press) {
         if (press == true && clawArm.getCurrentPosition() < 200) {
-            clawWrist.setPosition(0.5);
+            clawWrist.setPosition(0.45);
         }
-        else if (press == true && clawArm.getCurrentPosition() == 200) {
+        else if (press == true && clawArm.getCurrentPosition() > 200) {
             clawWrist.setPosition(0.3);
         }
     }

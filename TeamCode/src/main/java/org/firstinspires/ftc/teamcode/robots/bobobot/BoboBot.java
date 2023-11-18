@@ -30,8 +30,6 @@ public class BoboBot extends OpMode {
         bobo.claw.clawArmLower(gamepad1.b);
         bobo.claw.armWristDown(gamepad1.dpad_down);
         bobo.claw.armWristUp(gamepad1.dpad_up);
-        //bobo.claw.armPositionTest();
-
         bobo.claw.openClaw(gamepad1.right_bumper);
         bobo.claw.closeClaw(gamepad1.left_bumper);
         bobo.claw.telemetryOutput();

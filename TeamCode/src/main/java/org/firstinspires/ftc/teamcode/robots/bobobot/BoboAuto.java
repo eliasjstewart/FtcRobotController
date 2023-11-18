@@ -10,19 +10,30 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class BoboAuto extends OpMode {
 
     Autobot autobobo;
+//    boolean ranOnce;
     FtcDashboard dashboard;
     @Override
     public void init() {
         autobobo = new Autobot(telemetry, hardwareMap);
+//      ranOnce = false;
         dashboard = FtcDashboard.getInstance();
         dashboard.setTelemetryTransmissionInterval(25);
         telemetry.setMsTransmissionInterval(25);
     }
 
+    boolean didDriveTile = false;
     @Override
     public void loop() {
-        autobobo.drive.tile(1);
-        autobobo.drive.driveTelemetry();
+        autobobo.grip.autoWrist();
+        if(didDriveTile == false) {
+              if(autobobo.drive.tile(1)) {
+                  didDriveTile = true;
+              }
+            }
+//        autobobo.drive.right();
+//        autobobo.drive.tile(1);
+          autobobo.drive.driveTelemetry();
+
     }
 
 }
