@@ -31,6 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.robotcontroller.internal;
 
+import static org.firstinspires.ftc.robotcontroller.internal.LegacyGamepad.isGamepadDevice;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -49,6 +51,8 @@ import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -81,9 +85,11 @@ import com.qualcomm.ftccommon.configuration.RobotConfigFileManager;
 import com.qualcomm.ftcrobotcontroller.BuildConfig;
 import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.hardware.HardwareFactory;
+import com.qualcomm.robotcore.eventloop.EventLoop;
 import com.qualcomm.robotcore.eventloop.EventLoopManager;
 import com.qualcomm.robotcore.eventloop.opmode.FtcRobotControllerServiceState;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 import com.qualcomm.robotcore.hardware.configuration.Utility;
 import com.qualcomm.robotcore.robot.Robot;
@@ -127,6 +133,7 @@ import org.firstinspires.ftc.robotserver.internal.programmingmode.ProgrammingMod
 import org.firstinspires.inspection.RcInspectionActivity;
 import org.threeten.bp.YearMonth;
 import org.xmlpull.v1.XmlPullParserException;
+
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -182,6 +189,9 @@ public class FtcRobotControllerActivity extends Activity
   private static boolean permissionsValidated = false;
 
   private WifiDirectChannelChanger wifiDirectChannelChanger;
+
+  // cart hack
+  private int gamepadCombinationState = 0;
 
   protected class RobotRestarter implements Restarter {
 
@@ -842,4 +852,60 @@ public class FtcRobotControllerActivity extends Activity
       wifiMuteStateMachine.consumeEvent(WifiMuteEvent.USER_ACTIVITY);
     }
   }
+
+    @Override
+    public boolean dispatchGenericMotionEvent(MotionEvent event) {
+      if (!LegacyGamepad.isGamepadDevice(event.getDeviceId())) {
+        return super.dispatchGenericMotionEvent(event);
+      } else {
+        GamepadRC.gamepadRC.update(event);
+        return true;
+      }
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+      if (!LegacyGamepad.isGamepadDevice(event.getDeviceId())) {
+        return super.dispatchKeyEvent(event);
+      } else {
+        handleCartbot(event);
+        GamepadRC.gamepadRC.update(event);
+        return true;
+      }
+    }
+
+    private void handleCartbot(KeyEvent event) {
+      if(cfgFileMgr.getActiveConfig().getName().equals("cartbot_2021")) {
+        int key = event.getKeyCode();
+        switch(gamepadCombinationState) {
+          case 0:
+            if(key == KeyEvent.KEYCODE_BUTTON_Y)
+              gamepadCombinationState++;
+            break;
+          case 1:
+            if(key == KeyEvent.KEYCODE_BUTTON_B)
+              gamepadCombinationState++;
+            break;
+          case 2:
+            if(key == KeyEvent.KEYCODE_BUTTON_A)
+              gamepadCombinationState++;
+            break;
+          case 3:
+            if(key == KeyEvent.KEYCODE_BUTTON_X) {
+              Robot robot = controllerService.getRobot();
+              if ((robot != null) && (robot.eventLoopManager != null)) {
+                robot.eventLoopManager.getEventLoop().getOpModeManager().initOpMode("CartHack");
+                EventLoop cartbotEventLoop = robot.eventLoopManager.getEventLoop();
+                cartbotEventLoop.getOpModeManager().initOpMode("CartHack");
+                try {
+                  robot.eventLoopManager.setEventLoop(cartbotEventLoop);
+                } catch(Exception e) {
+                  e.printStackTrace();
+                }
+              }
+            }
+            break;
+        }
+      }
+    }
 }
